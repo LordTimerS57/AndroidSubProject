@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    tools:context=".ui.dashboard.DashboardFragment">
+
+    <!-- 1. Titre du Dashboard -->
+    <TextView
+        android:id="@+id/text_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Suivi des Locations"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 2. En-tête Fixe (Ne défile pas) -->
+    <TableLayout
+        android:id="@+id/header_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="#E0E0E0"
+        android:stretchColumns="*"
+        app:layout_constraintTop_toBottomOf="@id/text_dashboard">
+
+        <TableRow android:padding="10dp">
+
+            <TextView
+                android:text="Locataire"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="12sp" />
+
+            <TextView
+                android:text="Voiture"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="12sp" />
+
+            <TextView
+                android:text="Jours"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+
+            <TextView
+                android:text="Loyer"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="0.7"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+
+            <TextView
+                android:text="Actions"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="0.8"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+        </TableRow>
+    </TableLayout>
+
+    <!-- 3. Zone de contenu défilante -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_table">
+
+        <TableLayout
+            android:id="@+id/table_rentals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <!-- Ligne de donnée exemple -->
+            <TableRow
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:text="Jean Dupont"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:text="Peugeot 208"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:text="5"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:text="225€"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.7"
+                    android:textStyle="bold"
+                    android:textAlignment="center" />
+
+                <!-- Zone d'actions -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.8"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/btn_edit"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_edit"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="#2196F3" />
+
+                    <ImageButton
+                        android:id="@+id/btn_delete"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="4dp"
+                        android:src="@android:drawable/ic_menu_delete"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="#F44336" />
+                </LinearLayout>
+            </TableRow>
+
+            <!-- Ligne de séparation discrète -->
+            <View
+                android:layout_height="1dp"
+                android:background="#EEEEEE" />
+
+        </TableLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

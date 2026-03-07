@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">car_rent</string>
+    <string name="title_home">Acceuil</string>
+    <string name="title_dashboard">Locations attribuées</string>
+    <string name="title_notifications">Statistiques</string>
+    <string name="name_tenant">Nom et prénoms du locataire</string>
+    <string name="name_car_rented">Marque spécifiée de la voiture à louer</string>
+    <string name="number_of_day">Nombre de jours à louer</string>
+    <string name="rent_price_per_day">Prix journalier de la location (en Ar)</string>
+    <string name="rent_total">Loyer (en Ar)</string>
+</resources>

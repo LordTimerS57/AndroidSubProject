@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Ajouter une location"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Locataire -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/name_tenant" />
+
+        <EditText
+            android:id="@+id/et_add_tenant_name"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Nom du locataire"
+            android:inputType="text" />
+
+        <!-- Voiture -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/name_car_rented" />
+
+        <EditText
+            android:id="@+id/et_add_car_model"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Modèle du véhicule"
+            android:inputType="text" />
+
+        <!-- Jours -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/number_of_day" />
+
+        <EditText
+            android:id="@+id/et_add_days"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="0"
+            android:inputType="number" />
+
+        <!-- Prix / Jour -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/rent_price_per_day" />
+
+        <EditText
+            android:id="@+id/et_add_price_per_day"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="0.00"
+            android:inputType="numberDecimal" />
+
+        <!-- Total (Optionnel en ajout, souvent calculé automatiquement) -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/rent_total" />
+
+        <EditText
+            android:id="@+id/et_add_total_price"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:enabled="false"
+            android:focusable="false"
+            android:hint="Calculé automatiquement"
+            android:inputType="text" />
+
+        <!-- Boutons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_add_cancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Annuler" />
+
+            <Button
+                android:id="@+id/btn_add_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enregistrer" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
