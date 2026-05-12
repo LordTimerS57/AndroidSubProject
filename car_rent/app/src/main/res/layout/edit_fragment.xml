@@ -73,8 +73,8 @@
             android:id="@+id/et_edit_price_per_day"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="0.00"
-            android:inputType="numberDecimal" />
+            android:hint="0"
+            android:inputType="number" />
 
         <!-- Total -->
         <TextView

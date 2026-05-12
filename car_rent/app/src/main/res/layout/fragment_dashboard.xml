@@ -33,6 +33,14 @@
         <TableRow android:padding="10dp">
 
             <TextView
+                android:text="Id"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="12sp"
+                />
+
+            <TextView
                 android:text="Locataire"
                 android:textStyle="bold"
                 android:layout_width="0dp"
@@ -47,7 +55,7 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:text="Jours"
+                android:text="Nb de Jours à louer"
                 android:textStyle="bold"
                 android:layout_width="0dp"
                 android:layout_weight="0.5"
@@ -55,7 +63,14 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:text="Loyer"
+                android:text="Loyer par jour"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:text="Total loyer"
                 android:textStyle="bold"
                 android:layout_width="0dp"
                 android:layout_weight="0.7"

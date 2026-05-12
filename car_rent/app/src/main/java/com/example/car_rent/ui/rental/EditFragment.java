@@ -11,8 +11,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import com.example.car_rent.api.ApiService;
+import com.example.car_rent.api.RetrofitClient;
 import com.example.car_rent.databinding.EditFragmentBinding;
+import com.example.car_rent.models.Car;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EditFragment extends DialogFragment {
 
@@ -29,77 +39,142 @@ public class EditFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. RÉCUPÉRER les données envoyées par le Dashboard (Cohésion)
         if (getArguments() != null) {
-            binding.etEditTenantName.setText(getArguments().getString("tenant_name"));
-            binding.etEditCarModel.setText(getArguments().getString("car_model"));
-            binding.etEditDays.setText(String.valueOf(getArguments().getInt("days")));
-            binding.etEditPricePerDay.setText(String.valueOf(getArguments().getDouble("price_per_day")));
-            calculateTotal(); // Affiche le total initial
+            // Utilisation de "num_loc" partout pour être cohérent
+            int carId = getArguments().getInt("num_loc");
+            fetchCarDetails(carId);
         }
+    }
 
-        // 2. CALCUL AUTOMATIQUE (TextWatcher)
+    private void fetchCarDetails(int id) {
+        ApiService apiService = RetrofitClient.getApiService();
+
+        apiService.getCarById(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Car>> call, @NonNull Response<List<Car>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    Car car = response.body().get(0);
+
+                    binding.etEditTenantName.setText(car.getLocataire());
+                    binding.etEditCarModel.setText(car.getVoiture());
+                    binding.etEditDays.setText(String.valueOf(car.getJours()));
+                    binding.etEditPricePerDay.setText(String.valueOf(car.getPrix()));
+
+                    calculateTotal();
+                } else {
+                    Toast.makeText(getContext(), "Données non trouvées", Toast.LENGTH_SHORT).show();
+                }
+                setupListeners();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Car>> call, @NonNull Throwable t) { // Changé Car en List<Car>
+                Toast.makeText(getContext(), "Erreur : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Configure les listeners pour le calcul auto et les boutons
+     */
+    private void setupListeners() {
         TextWatcher calculator = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override public void afterTextChanged(Editable s) { calculateTotal(); }
         };
+
         binding.etEditDays.addTextChangedListener(calculator);
         binding.etEditPricePerDay.addTextChangedListener(calculator);
 
-        // 3. BOUTONS
         binding.btnEditSave.setOnClickListener(v -> updateRental());
         binding.btnEditCancel.setOnClickListener(v -> dismiss());
     }
 
     private void calculateTotal() {
         try {
-            double days = Double.parseDouble(binding.etEditDays.getText().toString());
-            double price = Double.parseDouble(binding.etEditPricePerDay.getText().toString());
+            int days = Integer.parseInt(binding.etEditDays.getText().toString());
+            long price = Long.parseLong(binding.etEditPricePerDay.getText().toString());
             binding.etEditTotalPrice.setText(String.valueOf(days * price));
         } catch (Exception e) {
-            binding.etEditTotalPrice.setText("0.0");
+            binding.etEditTotalPrice.setText("0");
         }
     }
 
-    // Remplacez votre ancienne méthode updateRental par celle-ci
+
     private void updateRental() {
-        // 1. Extraction et Validation (on garde la logique actuelle)
-        String tenant = binding.etEditTenantName.getText().toString();
-        String car = binding.etEditCarModel.getText().toString();
-        String daysStr = binding.etEditDays.getText().toString();
-        String priceStr = binding.etEditPricePerDay.getText().toString();
+        if (getArguments() != null){
+            int carId = getArguments().getInt("num_loc");
 
-        if (tenant.isEmpty() || car.isEmpty() || daysStr.isEmpty() || priceStr.isEmpty()) {
-            Toast.makeText(getContext(), "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
-            return;
+            String idStr = String.valueOf(carId);
+            String tenant = binding.etEditTenantName.getText().toString();
+            String car = binding.etEditCarModel.getText().toString();
+            String daysStr = binding.etEditDays.getText().toString();
+            String priceStr = binding.etEditPricePerDay.getText().toString();
+            String totalPriceStr = binding.etEditTotalPrice.getText().toString();
+
+            if (tenant.isEmpty() || car.isEmpty() || daysStr.isEmpty() || priceStr.isEmpty()) {
+                Toast.makeText(getContext(), "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Confirmation")
+                    .setMessage("Voulez-vous modifier cette location ?")
+                    .setNegativeButton("Non", null)
+                    .setPositiveButton("Oui", (dialog, which) -> {
+                        performSave(idStr, tenant, car, daysStr, priceStr, totalPriceStr);
+                    })
+                    .show();
         }
-
-        // 2. Création de la boîte de dialogue de confirmation
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Confirmation")
-                .setMessage("Voulez-vous vraiment enregistrer ces modifications ?")
-                .setNegativeButton("Non", null) // Ne fait rien, ferme juste le dialogue
-                .setPositiveButton("Oui", (dialog, which) -> {
-                    // 3. Si l'utilisateur confirme, on exécute l'envoi
-                    performSave(tenant, car, daysStr, priceStr);
-                })
-                .show();
     }
+
 
     // Nouvelle méthode qui contient la logique d'envoi final
-    private void performSave(String tenant, String car, String daysStr, String priceStr) {
-        Bundle result = new Bundle();
-        result.putString("tenant_name", tenant);
-        result.putString("car_model", car);
-        result.putInt("days", Integer.parseInt(daysStr));
-        result.putDouble("price_per_day", Double.parseDouble(priceStr));
-        result.putDouble("total_price", Double.parseDouble(binding.etEditTotalPrice.getText().toString()));
+    private void performSave(String tag, String tenant, String carModel, String daysStr, String priceStr, String totalPriceStr) {
+        try {
+            // 1. Conversion des données
+            int id = Integer.parseInt(tag);
+            int days = Integer.parseInt(daysStr);
+            long price = Long.parseLong(priceStr);
+            long total = Long.parseLong(totalPriceStr);
 
-        getParentFragmentManager().setFragmentResult("edit_rental_request", result);
+            // 2. Création de l'objet Car
+            Car newCar = new Car();
+            newCar.setId(id);
+            newCar.setLocataire(tenant);
+            newCar.setVoiture(carModel);
+            newCar.setJours(days);
+            newCar.setPrix(price);
+            newCar.setLoyer(total);
 
-        Toast.makeText(getContext(), "Location mise à jour", Toast.LENGTH_SHORT).show();
-        dismiss();
+            // 3. Appel API
+            ApiService apiService = RetrofitClient.getApiService();
+            apiService.updateCar(Integer.parseInt(tag), newCar).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<Car> call, @NonNull Response<Car> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Location modifiée avec succès !", Toast.LENGTH_SHORT).show();
+
+                        Bundle result = new Bundle();
+                        result.putBoolean("refresh", true);
+                        getParentFragmentManager().setFragmentResult("rental_updated", result);
+
+                        dismiss(); // Fermer le formulaire
+                    } else {
+                        Toast.makeText(getContext(), "Erreur serveur : " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Car> call, @NonNull Throwable t) {
+                    Toast.makeText(getContext(), "Échec de la connexion : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } catch (NumberFormatException e) {
+            Toast.makeText(getContext(), "Format de nombre invalide", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

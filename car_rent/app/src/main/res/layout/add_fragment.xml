@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="0.00"
-            android:inputType="numberDecimal" />
+            android:inputType="number" />
 
         <!-- Total (Optionnel en ajout, souvent calculé automatiquement) -->
         <TextView

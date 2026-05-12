@@ -20,6 +20,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", NGROK_URL
+        }
+        debug{
+            buildConfigField "String", "BASE_URL", NGROK_URL
         }
     }
     compileOptions {
@@ -28,6 +32,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 }
 
